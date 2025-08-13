@@ -9,8 +9,8 @@ template = [["","",""],
             ["","",""]]
 
 testGrid = [["X","X","O"],
-            ["","X",""],
-            ["O","O","X"]]
+            ["O","X",""],
+            ["O","","O"]]
 
 # Check if AI or Human Won:
 def whoWon(grid, row, column):
@@ -50,43 +50,122 @@ def winCheck(grid):
     return None
 
 # Find best move
-def findBestMove():
+def findBestMove(grid):
     # best score = -infinity
+    bestScore = -math.inf
     # best spaces = []
+    bestMoves = []
     # iterate through empty spaces
-    # call minimax, if greater than best score, best spaces = [move]. if == best score, bestspaces.append(move)
-    # if minimax is negative, you lost
-    # if you've lost, keep playing? choose smallest depth? or biggest....
+    for row in range(len(grid)):
+        for column in range(len(grid[row])):
+            if grid[row][column] == "":
+                grid[row][column] = AI
+                # call minimax, if greater than best score, best spaces = [move]. if == best score, bestspaces.append(move)
+                result = minimax(grid, False)
+                if result > bestScore:
+                    bestScore = result
+                    bestMoves = [(row,column)]
+                elif result == bestScore:
+                    bestMoves.append((row,column))
+                grid[row][column] = ""
     
-    # pick random space from list of possible spaces, starting with win list if not empty, then moving on to draw spaces
-    # place x on board 
-    return
+    # pick random space from list of possible spaces
+    return random.choice(bestMoves)
 
 # Minimax
-def minimax(board, isMaximising): #later add depth
+def minimax(grid, isMaximising): #later add depth
     # ismaximising means it's the ai turn, else simulate the player
     # check for win state, return if there is one
-
+    winState = winCheck(grid)
+    if winState != None:
+        # do something later when someone wins
+        return winState
     # if currently nothing, continue and... 
 
     # if maximising, 
-    # best score = -infinity
-    # iterate through empty squares
-    # call minimaxing(ismaximising = false) 
-    # (pass a copy of the board, but in future maybe pass real board and then undo? for memory)
-    # if higher than best score, update var
-    # when finished, return best score
-
-    # if not maximising,
-    # best score = +infinity
-    # iterate through empty squares
-    # call minimaxing(ismaximising = true)
-    # if lower than best score, update var
-    # when finished, return best score
-
-    return #best score
+    if isMaximising:
+        bestScore = -math.inf
+        # best score = -infinity    
+        # iterate through empty squares
+        for row in range(len(grid)):
+            for column in range(len(grid[row])):
+                if grid[row][column] == "":
+                    grid[row][column] = AI
+                    # call minimaxing(ismaximising = false) 
+                    result = minimax(grid, False)
+                    if result > bestScore:
+                        # if higher than best score, update var
+                        bestScore = result
+                    grid[row][column] = ""
+        # when finished, return best score
+        return bestScore
+    else:
+        bestScore = math.inf
+        # best score = infinity    
+        # iterate through empty squares
+        for row in range(len(grid)):
+            for column in range(len(grid[row])):
+                if grid[row][column] == "":
+                    grid[row][column] = HUMAN
+                    # call minimaxing(ismaximising = false) 
+                    result = minimax(grid, True)
+                    if result < bestScore:
+                        # if lower than best score, update var
+                        bestScore = result
+                    grid[row][column] = ""
+        # when finished, return best score
+        return bestScore
 
 # later add alpha beta pruning
 
+def game():
+    grid = template
+    playerTurn = True
+    print("Naughts and Crosses:")
+    print("You are playing naughts (O)")
+    while True:
+        while playerTurn:
+            print()
+            for i in range(3):
+                print(grid[i])
+            userRow = input("Enter row (0, 1, 2): ")
+            userColumn = input("Enter column (0, 1 ,2): ")
+            # check for int later
+            
+            if grid[int(userRow)][int(userColumn)] == "":
+                grid[int(userRow)][int(userColumn)] = HUMAN
+                playerTurn = False
+            else:
+                print("That space is taken, choose another.")
+
+        winState = winCheck(grid)
+        if winState == 1:
+            print("You win!")
+            return
+        elif winState == -1:
+            print("You lose...")
+            return
+        elif winState == 0:
+            print("You draw!")
+            return
+
+        cpuRow, cpuColumn = findBestMove(grid)
+        print("Computer makes a move...")
+        grid[cpuRow][cpuColumn] = AI
+
+        winState = winCheck(grid)
+        if winState == 1:
+            print("You win!")
+            return
+        elif winState == -1:
+            print("You lose...")
+            return
+        elif winState == 0:
+            print("You draw!")
+            return
+        playerTurn = True
+
+
+
 if __name__ == '__main__':
-    print(winCheck(testGrid))
+    game()
