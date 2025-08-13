@@ -42,3 +42,4 @@ def reset():
     for row in range(len(grid)):
         for column in range(len(grid[row])):
             grid[row][column] = ""
+    return jsonify({"grid": grid})

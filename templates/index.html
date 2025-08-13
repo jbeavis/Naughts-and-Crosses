@@ -2,16 +2,7 @@
 <html>
 <head>
     <title>Naughts and Crosses</title>
-    <style>
-        table { border-collapse: collapse; margin: 20px auto; }
-        td {
-            width: 80px; height: 80px;
-            border: 2px solid black;
-            text-align: center;
-            font-size: 2em;
-            cursor: pointer;
-        }
-    </style>
+    <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
 </head>
 <body>
     <h1 style="text-align:center">Naughts and Crosses</h1>
@@ -27,6 +18,6 @@
     <div style="text-align: center;">
         <button id="resetButton">Reset</button>
     </div>
-    <script src="/static/script.js"></script>
+    <script src="{{url_for('static', filename='js/gameHandler.js') }}"></script>
 </body>
 </html>
