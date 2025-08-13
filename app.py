@@ -1,6 +1,4 @@
 from flask import Flask, render_template, request, jsonify
-import math
-import random
 import game
 
 app = Flask(__name__)
@@ -36,8 +34,8 @@ def play():
 
     return jsonify({"grid": grid, "winner": game.winCheck(grid)})
 
-@app.route("/reset", methods=["POST"])
-def reset():
+@app.route("/replay", methods=["POST"])
+def replay():
     global grid
     for row in range(len(grid)):
         for column in range(len(grid[row])):

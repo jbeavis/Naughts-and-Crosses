@@ -1,6 +1,6 @@
 // static/script.js
-document.querySelector("#resetButton").addEventListener("click", function() {
-    fetch("/reset", {
+document.querySelector("#replayButton").addEventListener("click", function() {
+    fetch("/replay", {
         method: "POST",
     })
     // Update board
